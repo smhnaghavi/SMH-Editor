@@ -3,10 +3,10 @@ from tkinter import ttk
 from tkinter import font, colorchooser, filedialog, messagebox
 import os
 
-main_screen_window = tk.Tk()
-main_screen_window.geometry('700x700')
-main_screen_window.title('TextEditor')
-main_screen_window.wm_iconbitmap('resources/notepad.ICO')
+window = tk.Tk()
+window.geometry('700x700')
+window.title('SMH Editor')
+# window.wm_iconbitmap('resources/notepad.ICO')
 
 head_menu = tk.Menu()
 
@@ -45,6 +45,7 @@ color_theme = tk.Menu(head_menu, tearoff=False)
 theme_choice = tk.StringVar()
 color_icons = (light_blue_logo, light_green_logo, blue_logo, red_logo, green_logo, violet_logo, yellowgreen_logo)
 
+about_menu = tk.Menu(head_menu, tearoff=False)
 
 color_dict = {
     'Light Blue': ('#2d2d2d', '#add8e6'),
@@ -67,11 +68,12 @@ head_menu.add_cascade(label='File', menu=file)
 head_menu.add_cascade(label='Edit', menu=edit)
 head_menu.add_cascade(label='View', menu=view)
 head_menu.add_cascade(label='Color Theme', menu=color_theme)
-head_menu.add_cascade(label='About',command=about)
+head_menu.add_cascade(label='About',menu=about_menu)
+
+about_menu.add_command(label='About',compound=tk.LEFT,command=about)
 
 
-
-tool_bar = ttk.Label(main_screen_window)
+tool_bar = ttk.Label(window)
 tool_bar.pack(side=tk.TOP,fill=tk.X)
 
 
@@ -79,7 +81,7 @@ font_tuple = tk.font.families()
 font_family = tk.StringVar()
 font_group = ttk.Combobox(tool_bar, width=30, textvariable=font_family, state='readonly' )
 font_group['values'] = font_tuple
-font_group.current(font_tuple.index('Arial'))
+font_group.current(font_tuple.index("Noto Sans Tamil UI"))
 font_group.grid(row=0, column=0, padx=5)
 
 
@@ -131,11 +133,11 @@ right_align_button.grid(row=0, column=8, padx=5)
 
 
 
-text_editor = tk.Text(main_screen_window)
+text_editor = tk.Text(window)
 text_editor.config(wrap='word', relief=tk.FLAT)
 
 
-scroll_bar = tk.Scrollbar(main_screen_window)
+scroll_bar = tk.Scrollbar(window)
 text_editor.focus_set()
 scroll_bar.pack(side=tk.RIGHT, fill=tk.Y)
 text_editor.pack(fill=tk.BOTH, expand=True)
@@ -232,7 +234,7 @@ right_align_button.configure(command=right_align)
 
 text_editor.configure(font=('Arial',12))
 
-status_bar = ttk.Label(main_screen_window, text ='Status Bar')
+status_bar = ttk.Label(window, text ='Status Bar')
 status_bar.pack(side=tk.BOTTOM)
 
 text_changed = False
@@ -269,7 +271,7 @@ def open_file_logo(event=None):
         return
     except :
         return
-    main_screen_window.title(os.path.basename(url))
+    window.title(os.path.basename(url))
 
 
 file.add_command(label='Open', image=open_logo ,compound=tk.LEFT, accelerator ='Ctrl+O',command =open_file_logo)
@@ -319,17 +321,17 @@ def exit_module(event=None):
                     content = text_editor.get(1.0,tk.END)
                     with open(url,'w',encoding='utf-8') as fw:
                         fw.write(content)
-                        main_screen_window.destroy()
+                        window.destroy()
                 else:
                     content2 = str(text_editor.get(1.0,tk.END))
                     url = filedialog.asksaveasfile(mode='w',defaultextension='.txt',filetypes=(('Text File','*.txt'),('All files','*.*')))
                     url.write(content2)
                     url.close()
-                    main_screen_window.destroy()
+                    window.destroy()
             elif boxmessage is False:
-                main_screen_window.destroy()
+                window.destroy()
         else:
-            main_screen_window.destroy()
+            window.destroy()
     except:
         return
 
@@ -456,14 +458,14 @@ for i in color_dict :
     color_theme.add_radiobutton(label = i,image=color_icons[count],variable=theme_choice,compound=tk.LEFT,command =palitan_theme)
     count+=1
 
-main_screen_window.bind("<Control-n>", new_file_logo)
-main_screen_window.bind("<Control-o>", open_file_logo)
-main_screen_window.bind("<Control-s>", save_file_logo)
-main_screen_window.bind("<Control-Alt-s>", save_as_logo_file)
-main_screen_window.bind("<Control-q>", exit_module)
-main_screen_window.bind("<Control-q>", exit_module)
-main_screen_window.bind("<Control-f>", search_module)
+window.bind("<Control-n>", new_file_logo)
+window.bind("<Control-o>", open_file_logo)
+window.bind("<Control-s>", save_file_logo)
+window.bind("<Control-Alt-s>", save_as_logo_file)
+window.bind("<Control-q>", exit_module)
+window.bind("<Control-q>", exit_module)
+window.bind("<Control-f>", search_module)
 
-main_screen_window.config(menu=head_menu)
-main_screen_window.mainloop()
+window.config(menu=head_menu)
+window.mainloop()
 
